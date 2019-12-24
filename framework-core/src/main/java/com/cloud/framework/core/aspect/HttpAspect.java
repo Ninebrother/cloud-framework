@@ -21,7 +21,8 @@ public class HttpAspect {
     /**
      * 请求参数
      */
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+//    @Pointcut("@annotation(org.springframework.web.bind.annotation.RestController)")
+    @Pointcut("execution(* com..controller.*.*(..))")
     public void log() {
     }
 

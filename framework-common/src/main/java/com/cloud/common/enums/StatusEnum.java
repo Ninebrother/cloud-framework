@@ -12,7 +12,9 @@ public enum StatusEnum {
 
     FAILED("500", "FAILED"),
 
-    UN_AUTH("403", "没有权限，请联系管理员授权");
+    UN_AUTH("403", "没有权限，请联系管理员授权"),
+    UN_LOGIN("404", "没有登录，请登录"),;
+
     private String code;
     private String message;
 

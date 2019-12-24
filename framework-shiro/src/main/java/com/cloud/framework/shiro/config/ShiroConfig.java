@@ -5,6 +5,7 @@ import com.cloud.framework.shiro.ShiroSessionIdGenerator;
 import com.cloud.framework.shiro.ShiroSessionManager;
 import com.cloud.framework.shiro.client.UserClient;
 import com.cloud.framework.shiro.constant.ShiroConstant;
+import com.cloud.framework.shiro.filter.AjaxPermissionsAuthorizationFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.SecurityManager;
@@ -19,10 +20,14 @@ import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import javax.servlet.Filter;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +36,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableFeignClients(basePackageClasses = {UserClient.class})
+@ComponentScan("com.cloud.framework.shiro")
 public class ShiroConfig {
     @Value("${spring.redis.host}")
     private String host;
@@ -38,6 +44,8 @@ public class ShiroConfig {
     private int port;
     @Value("${spring.redis.password}")
     private String password;
+    @Value("${shiro.excludes}")
+    private String shiroExcludes;
 
     /**
      * 开启Shiro-aop注解支持
@@ -64,18 +72,23 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+
         // 注意过滤器配置顺序不能颠倒
         // 配置过滤:不会被拦截的链接
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/webjars/**", "anon");
         filterChainDefinitionMap.put("/v2/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
-
-        filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/userLogin/**", "anon");
-
-        // 配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
-        shiroFilterFactoryBean.setLoginUrl("/userLogin/unAuth");
+        if (StringUtils.isNotEmpty(shiroExcludes)) {
+            List<String> excludes = Arrays.asList(shiroExcludes.split(","));
+            for (String exclude : excludes) {
+                filterChainDefinitionMap.put(exclude, "anon");
+            }
+        }
+        Map<String, Filter> filterMap = new LinkedHashMap<>();
+        filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+        filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -107,7 +120,7 @@ public class ShiroConfig {
     @Bean
     public ShiroRealm shiroRealm() {
         ShiroRealm shiroRealm = new ShiroRealm();
-        //配置 BCrypt
+        //配置BCrypt
         shiroRealm.setCredentialsMatcher((token, info) -> {
             UsernamePasswordToken userToken = (UsernamePasswordToken) token;
             //要验证的明文密码
