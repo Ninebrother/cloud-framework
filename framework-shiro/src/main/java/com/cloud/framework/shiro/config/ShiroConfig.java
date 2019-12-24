@@ -17,11 +17,13 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.servlet.Filter;
@@ -44,8 +46,8 @@ public class ShiroConfig {
     private int port;
     @Value("${spring.redis.password}")
     private String password;
-    @Value("${shiro.excludes}")
-    private String shiroExcludes;
+    @Autowired
+    private Environment env;
 
     /**
      * 开启Shiro-aop注解支持
@@ -79,16 +81,23 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/webjars/**", "anon");
         filterChainDefinitionMap.put("/v2/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
-        if (StringUtils.isNotEmpty(shiroExcludes)) {
+
+        Boolean shiroAuth = env.containsProperty(ShiroConstant.SHIRO_AUTH_ENABLE)
+                ? env.getProperty(ShiroConstant.SHIRO_AUTH_ENABLE, Boolean.class) : Boolean.TRUE;
+        String shiroExcludes = env.getProperty("shiro.excludes");
+        if (shiroAuth && StringUtils.isNotEmpty(shiroExcludes)) {
             List<String> excludes = Arrays.asList(shiroExcludes.split(","));
             for (String exclude : excludes) {
                 filterChainDefinitionMap.put(exclude, "anon");
             }
         }
-        Map<String, Filter> filterMap = new LinkedHashMap<>();
-        filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
-        shiroFilterFactoryBean.setFilters(filterMap);
-        filterChainDefinitionMap.put("/**", "authc");
+
+        if (shiroAuth) {
+            Map<String, Filter> filterMap = new LinkedHashMap<>();
+            filterMap.put("authc", new AjaxPermissionsAuthorizationFilter());
+            shiroFilterFactoryBean.setFilters(filterMap);
+            filterChainDefinitionMap.put("/**", "authc");
+        }
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
