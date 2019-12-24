@@ -17,10 +17,10 @@ import java.util.List;
  * @Date 2019/12/22
  *  * Mybatis-plus 自动生成代码
  */
-public class MpGenerator {
+    public class MpGenerator {
     public static final String OUTPUTDIR = "D:/IdeaWorkSpaces/group-cloud/group-service/user-service";
     public static final String AUTHOR = "zhangyl";
-    public static final String DBURL = "jdbc:mysql://localhost:3306/sys_user?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8";
+    public static final String DBURL = "jdbc:mysql://localhost:3306/ruoyi?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8";
     public static final String DBDRIVER = "com.mysql.jdbc.Driver";
     public static final String DBUSER = "root";
     public static final String DBPASSWORD = "root";
@@ -28,7 +28,7 @@ public class MpGenerator {
 
     public static void main(String[] args) {
         //表名
-        String tableNames = "sys_menu,sys_role_menu";
+        String tableNames = "sys_menu,sys_role,sys_role_dept,sys_role_menu,sys_user,sys_user_role";
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
@@ -115,7 +115,10 @@ public class MpGenerator {
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
+        // 公共父类
+        //strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
         // 写于父类中的公共字段
+        //strategy.setSuperEntityColumns("id");
         strategy.setInclude(tableNames.split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

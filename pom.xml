@@ -20,7 +20,15 @@
     <modules>
         <module>framework-common</module>
         <module>framework-core</module>
+        <module>framework-shiro</module>
     </modules>
 
-
+    <dependencies>
+        <!--servlet-api-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
