@@ -23,4 +23,14 @@ public interface IRedisService {
      * @return
      */
     boolean set(String key, String value, Long expireTime);
+
+    /**
+     * 读取缓存
+     *
+     * @param key
+     * @param t
+     * @param <T>
+     * @return
+     */
+    <T> T get(String key, Class<T> T);
 }

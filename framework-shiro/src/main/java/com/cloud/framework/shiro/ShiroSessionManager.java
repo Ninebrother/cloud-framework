@@ -34,7 +34,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
     public Serializable getSessionId(ServletRequest request, ServletResponse response) {
         String token = WebUtils.toHttp(request).getHeader(GlobalContants.X_ACCESS_TOKEN);
         //如果请求头中存在token 则从请求头中获取token
-        if (!StringUtils.isEmpty(token)) {
+        if (StringUtils.isNotEmpty(token)) {
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_SOURCE, REFERENCED_SESSION_ID_SOURCE);
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID, token);
             request.setAttribute(ShiroHttpServletRequest.REFERENCED_SESSION_ID_IS_VALID, Boolean.TRUE);

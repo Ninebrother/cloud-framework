@@ -1,5 +1,6 @@
 package com.cloud.common.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.cloud.common.enums.YNEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class LoginUserDTO implements Serializable {
+public class LoginUser implements Serializable {
 
     private static final long serialVersionUID = -6379483900498522294L;
     private Long userId;

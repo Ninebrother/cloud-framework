@@ -1,6 +1,6 @@
 package com.cloud.framework.shiro.client;
 
-import com.cloud.common.entity.LoginUserDTO;
+import com.cloud.common.entity.LoginUser;
 import com.cloud.common.entity.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,5 +38,5 @@ public interface UserClient {
      * @return
      */
     @GetMapping("user/getByUserName/{userName}")
-    ResponseResult<LoginUserDTO> getByUserName(@PathVariable("userName") String userName);
+    ResponseResult<LoginUser> getByUserName(@PathVariable("userName") String userName);
 }

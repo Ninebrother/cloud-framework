@@ -1,6 +1,6 @@
 package com.cloud.framework.shiro;
 
-import com.cloud.common.entity.LoginUserDTO;
+import com.cloud.common.entity.LoginUser;
 import com.cloud.common.enums.YNEnum;
 import com.cloud.framework.shiro.client.UserClient;
 import org.apache.shiro.authc.*;
@@ -41,7 +41,7 @@ public class ShiroRealm extends AuthorizingRealm {
         logger.info("===============Shiro权限认证开始============ [ roles、permissions]==========");
         //获取用户ID
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        LoginUserDTO loginUserDTO = (LoginUserDTO) principalCollection.getPrimaryPrincipal();
+        LoginUser loginUserDTO = (LoginUser) principalCollection.getPrimaryPrincipal();
         Long userId = loginUserDTO.getUserId();
 
         // 设置用户拥有的角色集合，比如“admin”
@@ -69,7 +69,7 @@ public class ShiroRealm extends AuthorizingRealm {
         String loginName = (String) authenticationToken.getPrincipal();
         //通过username从数据库中查找 User对象，如果找到进行验证
         //实际项目中,这里可以根据实际情况做缓存,如果不做,Shiro自己也是有时间间隔机制,2分钟内不会重复执行该方法
-        LoginUserDTO user = userClient.getByUserName(loginName).getData();
+        LoginUser user = userClient.getByUserName(loginName).getData();
         //判断账号是否存在
         if (user == null) {
             throw new AuthenticationException("用户不存在");

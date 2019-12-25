@@ -50,4 +50,15 @@ public class RedisService implements IRedisService {
         return result;
     }
 
+    @Override
+    public <T> T get(String key, Class<T> T) {
+        try {
+            ValueOperations<Serializable, T> operations = redisTemplate.opsForValue();
+            T result = operations.get(key);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
