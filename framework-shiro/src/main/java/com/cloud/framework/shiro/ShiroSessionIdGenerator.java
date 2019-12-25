@@ -21,6 +21,6 @@ public class ShiroSessionIdGenerator implements SessionIdGenerator {
     @Override
     public Serializable generateId(Session session) {
         Serializable sessionId = new JavaUuidSessionIdGenerator().generateId(session);
-        return String.format(ShiroConstant.REDIS_PREFIX_LOGIN, sessionId);
+        return String.format(ShiroConstant.REDIS_PREFIX_LOGIN, sessionId).replace("-","");
     }
 }

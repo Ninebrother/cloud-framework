@@ -12,7 +12,7 @@ public interface IRedisService {
      * @param value
      * @return
      */
-    boolean set(String key, String value);
+    boolean set(String key, Object value);
 
     /**
      * 写入缓存
@@ -22,13 +22,13 @@ public interface IRedisService {
      * @param expireTime 毫秒
      * @return
      */
-    boolean set(String key, String value, Long expireTime);
+    boolean set(String key, Object value, Long expireTime);
 
     /**
      * 读取缓存
      *
      * @param key
-     * @param t
+     * @param T
      * @param <T>
      * @return
      */

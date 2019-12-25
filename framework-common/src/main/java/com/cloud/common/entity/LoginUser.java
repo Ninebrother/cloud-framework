@@ -1,11 +1,11 @@
 package com.cloud.common.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.cloud.common.enums.YNEnum;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author zhangyl
@@ -32,4 +32,12 @@ public class LoginUser implements Serializable {
      * 状态(0-删除、禁用,1-正常) {@link YNEnum}
      */
     private Integer state;
+    /**
+     * 部门ID
+     */
+    private Long deptId;
+    /**
+     * 数据权限部门ID
+     */
+    private List<Long> deptIds;
 }
