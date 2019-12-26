@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RedisService implements IRedisService {
-    public static final Long EXPIRE_TIME = 1000L*60*30;
+    public static final Long EXPIRE_TIME = 1000L * 60 * 30;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -41,8 +41,7 @@ public class RedisService implements IRedisService {
     public boolean set(String key, Object value, Long expireTime) {
         boolean result = false;
         try {
-            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
-            operations.set(key, value, expireTime, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(key, value, expireTime, TimeUnit.MILLISECONDS);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,7 +51,7 @@ public class RedisService implements IRedisService {
 
 
     @Override
-    public <T> T get(String key, Class<T> T) {
+    public <T> T get(String key, Class T) {
         try {
             ValueOperations<Serializable, T> operations = redisTemplate.opsForValue();
             T result = operations.get(key);

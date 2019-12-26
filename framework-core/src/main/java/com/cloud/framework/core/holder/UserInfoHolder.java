@@ -15,11 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author zhangyl
  * @Date 2019/12/25
+ * 相当登陆用户信息
  */
 public class UserInfoHolder {
 
     public static final Logger logger = LoggerFactory.getLogger(UserInfoHolder.class);
 
+    /**
+     * 获取相当登陆用户信息
+     *
+     * @return
+     */
     public static LoginUser get() {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();

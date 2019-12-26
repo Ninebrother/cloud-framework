@@ -28,9 +28,7 @@ public interface IRedisService {
      * 读取缓存
      *
      * @param key
-     * @param T
-     * @param <T>
      * @return
      */
-    <T> T get(String key, Class<T> T);
+    <T> T get(final String key, Class T);
 }
